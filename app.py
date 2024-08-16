@@ -3,9 +3,14 @@ import folium
 from folium import IFrame
 import base64
 import plotly.express as px
+import os
+
+# Construir la ruta del archivo de manera flexible
+base_path = os.path.dirname(__file__)  # Obtiene el directorio del script
+file_path = os.path.join(base_path, 'EVI_Puntos_250m.csv')
 
 # Cargar el archivo CSV (ajusta la ruta al archivo subido)
-df = pd.read_csv('EVI_Puntos_250m.csv')
+df = pd.read_csv(file_path)
 df['coordinates'] = df['coordinates'].str.replace("[", "")
 df['coordinates'] = df['coordinates'].str.replace("]", "")
 

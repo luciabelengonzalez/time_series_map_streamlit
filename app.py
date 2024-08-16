@@ -4,21 +4,15 @@ from folium import IFrame
 import base64
 import plotly.express as px
 import os
+import requests
+from io import StringIO
+import streamlit as st
 
-import os
+url = 'https://raw.githubusercontent.com/[username]/[repository]/main/[file].csv'
+response = requests.get(url)
+df = pd.read_csv(StringIO(response.text))
 
-file_path = 'EVI_Puntos_250m.csv'
-if os.path.exists(file_path):
-    print(f"El archivo {file_path} se encuentra en la ruta especificada.")
-else:
-    print(f"El archivo {file_path} no se encuentra en la ruta especificada.")
 
-# Construir la ruta del archivo de manera flexible
-base_path = os.path.dirname(__file__)  # Obtiene el directorio del script
-file_path = os.path.join(base_path, 'EVI_Puntos_250m.csv')
-
-# Cargar el archivo CSV (ajusta la ruta al archivo subido)
-df = pd.read_csv(file_path)
 df['coordinates'] = df['coordinates'].str.replace("[", "")
 df['coordinates'] = df['coordinates'].str.replace("]", "")
 

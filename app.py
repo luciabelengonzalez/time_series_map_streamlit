@@ -6,6 +6,8 @@ import os
 import requests
 from io import StringIO
 import streamlit as st
+from folium.plugins import MarkerCluster
+
 
 url = 'https://raw.githubusercontent.com/luciabelengonzalez/time_series_map_streamlit/main/EVI_Puntos_250m%20(1).csv'
 response = requests.get(url)

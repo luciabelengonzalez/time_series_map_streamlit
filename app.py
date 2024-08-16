@@ -42,7 +42,7 @@ def create_map(df):
     marker_cluster = MarkerCluster().add_to(m)
 
     for idx, row in df.iterrows():
-        id row['id'] not in used_ids:
+        if row['id'] not in used_ids:
             coord = row['coordinates'].split(',')
             lat, lon = float(coord[0]), float(coord[1])
             popup_content = f"""

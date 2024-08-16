@@ -28,7 +28,9 @@ df['date'] = pd.to_datetime(df['date'])
 df['year_month'] = df['date'].dt.to_period('M').astype(str)
 print(df.head())  # Print the first few rows to see if 'coordinates' is present and correctly formatted
 # Crear una función para generar el mapa
+
 def create_map(df):
+    used_ids = []
     df[['longitude', 'latitude']] = pd.DataFrame(df['coordinates'].tolist(), index=df.index)
     lon_mean = df['longitude'].astype(float).mean()
     lat_mean = df['latitude'].astype(float).mean()
@@ -40,14 +42,15 @@ def create_map(df):
     marker_cluster = MarkerCluster().add_to(m)
 
     for idx, row in df.iterrows():
-        coord = row['coordinates'].split(',')
-        lat, lon = float(coord[0]), float(coord[1])
-        popup_content = f"""
-        <b>ID:</b> {row['id']}<br>
-        <b>Date:</b> {row['date'].strftime('%Y-%m-%d')}<br>
-        <b>EVI:</b> {row['EVI']}<br>
-        <a href="#" onclick="fetch_data({row['id']}); return false;">View Time Series</a>
-        """
+        id row['id'] not in used_ids:
+            coord = row['coordinates'].split(',')
+            lat, lon = float(coord[0]), float(coord[1])
+            popup_content = f"""
+            <b>ID:</b> {row['id']}<br>
+            <b>Date:</b> {row['date'].strftime('%Y-%m-%d')}<br>
+            <b>EVI:</b> {row['EVI']}<br>
+            <a href="#" onclick="fetch_data({row['id']}); return false;">View Time Series</a>
+            """
         popup = IFrame(popup_content, width=200, height=100)
         folium.Marker(location=[lat, lon], popup=folium.Popup(popup)).add_to(marker_cluster)
     

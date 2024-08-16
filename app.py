@@ -8,7 +8,7 @@ import requests
 from io import StringIO
 import streamlit as st
 
-url = 'https://raw.githubusercontent.com/[username]/[repository]/main/[file].csv'
+url = 'https://raw.githubusercontent.com/luciabelengonzalez/time_series_map_streamlit/main/EVI_Puntos_250m.csv'
 response = requests.get(url)
 df = pd.read_csv(StringIO(response.text))
 

@@ -51,8 +51,8 @@ def create_map(df):
             <b>EVI:</b> {row['EVI']}<br>
             <a href="#" onclick="fetch_data({row['id']}); return false;">View Time Series</a>
             """
-        popup = IFrame(popup_content, width=200, height=100)
-        folium.Marker(location=[lat, lon], popup=folium.Popup(popup)).add_to(marker_cluster)
+            popup = IFrame(popup_content, width=200, height=100)
+            folium.Marker(location=[lat, lon], popup=folium.Popup(popup)).add_to(marker_cluster)
     
     return m
 

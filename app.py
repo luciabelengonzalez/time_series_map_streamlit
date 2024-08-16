@@ -1,7 +1,6 @@
 import pandas as pd
 import folium
 from folium import IFrame
-import base64
 import plotly.express as px
 import os
 import requests
@@ -25,12 +24,6 @@ df['date'] = pd.to_datetime(df['date'])
 
 # Extraer año y mes de la fecha como Periodo y luego convertir a string
 df['year_month'] = df['date'].dt.to_period('M').astype(str)
-
-import streamlit as st
-import folium
-from folium import IFrame
-from folium.plugins import MarkerCluster
-import matplotlib.pyplot as plt
 
 # Crear una función para generar el mapa
 def create_map(df):

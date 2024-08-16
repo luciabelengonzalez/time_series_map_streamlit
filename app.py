@@ -27,8 +27,11 @@ df['year_month'] = df['date'].dt.to_period('M').astype(str)
 print(df.head())  # Print the first few rows to see if 'coordinates' is present and correctly formatted
 # Crear una función para generar el mapa
 def create_map(df):
-    m = folium.Map(location=[df['coordinates'].str.split(',', expand=True)[0].astype(float).mean(),
-                              df['coordinates'].str.split(',', expand=True)[1].astype(float).mean()],
+    df[['longitude', 'latitude']] = pd.DataFrame(df['coordinates'].tolist(), index=df.index)
+    lon_mean = df['longitude'].astype(float).mean()
+    lat_mean = df['latitude'].astype(float).mean()
+    m = folium.Map(location=[lon_mean,
+                              lat_mean],
                    zoom_start=10)
 
     # Agrupar los puntos en un MarkerCluster

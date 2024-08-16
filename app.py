@@ -5,6 +5,14 @@ import base64
 import plotly.express as px
 import os
 
+import os
+
+file_path = 'EVI_Puntos_250m.csv'
+if os.path.exists(file_path):
+    print(f"El archivo {file_path} se encuentra en la ruta especificada.")
+else:
+    print(f"El archivo {file_path} no se encuentra en la ruta especificada.")
+
 # Construir la ruta del archivo de manera flexible
 base_path = os.path.dirname(__file__)  # Obtiene el directorio del script
 file_path = os.path.join(base_path, 'EVI_Puntos_250m.csv')

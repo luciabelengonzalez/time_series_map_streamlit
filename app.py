@@ -24,7 +24,7 @@ df['date'] = pd.to_datetime(df['date'])
 
 # Extraer año y mes de la fecha como Periodo y luego convertir a string
 df['year_month'] = df['date'].dt.to_period('M').astype(str)
-
+print(df.head())  # Print the first few rows to see if 'coordinates' is present and correctly formatted
 # Crear una función para generar el mapa
 def create_map(df):
     m = folium.Map(location=[df['coordinates'].str.split(',', expand=True)[0].astype(float).mean(),

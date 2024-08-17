@@ -50,7 +50,7 @@ def create_map(df):
             <a href="#" onclick="fetch_data({row['id']}); return false;">View Time Series</a>
             """
             popup = IFrame(popup_content, width=200, height=100)
-            folium.Marker(location=[row['latitude'], row['longitude'], popup=folium.Popup(popup)).add_to(marker_cluster)
+            folium.Marker(location=[row['latitude'], row['longitude']], popup=folium.Popup(popup)).add_to(marker_cluster)
     
     return m
 

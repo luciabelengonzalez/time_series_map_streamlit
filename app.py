@@ -29,7 +29,7 @@ df['date'] = pd.to_datetime(df['date'])
 
 # Crear un mapa base usando Folium con fondo de ESRI
 m = folium.Map(
-    location=[df['lat'].mean(), df['lon'].mean()],
+    location=[df['latitude'].mean(), df['longitude'].mean()],
     zoom_start=10,
     tiles=ESRI_SATELLITE_TILES,
     attr="ESRI"
@@ -59,7 +59,7 @@ for uid in unique_ids:
     iframe = IFrame(html=popup_html + script, width=200, height=100)
     folium.Popup(iframe).add_to(
         folium.CircleMarker(
-            location=[coord['lat'], coord['lon']],
+            location=[coord['latitude'], coord['longitude']],
             radius=8,
             color='blue',
             fill=True,
@@ -91,5 +91,3 @@ if not selected_df.empty:
     st.plotly_chart(fig)
 else:
     st.write("No hay datos disponibles para el ID seleccionado.")
-    
-

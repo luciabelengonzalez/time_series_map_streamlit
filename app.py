@@ -59,6 +59,4 @@ if not selected_data.empty:
 else:
     st.write("No hay datos disponibles para el ID seleccionado.")
     
-# Mostrar el gráfico en Streamlit
-st.write(f"### Serie Temporal de EVI para ID: {selected_id}")
 

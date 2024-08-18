@@ -63,9 +63,8 @@ for uid in unique_ids:
         color='blue',  # Color del borde
         fill=True,
         fill_color='blue',  # Color de relleno
-        fill_opacity=0.6,  # Opacidad del relleno
-        popup=f"ID: {uid}"
-    ).add_to(m)
+        fill_opacity=0.6, ))
+    .add_to(m)
 
 # Mostrar el mapa en Streamlit
 st.write("### Mapa de puntos")

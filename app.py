@@ -32,13 +32,10 @@ df['date'] = pd.to_datetime(df['date'])
 # Crear un mapa base usando Folium con fondo de ESRI
 m = folium.Map(
     location=[df['latitude'].mean(), df['longitude'].mean()],
-    zoom_start=10,
+    zoom_start=5,
     tiles=ESRI_SATELLITE_TILES,
     attr="ESRI"
 )
-
-# Crear un mapa base usando Folium
-m = folium.Map(location=[df['latitude'].mean(), df['longitude'].mean()], zoom_start=10)
 
 # Agregar un marcador por ID único
 unique_ids = df['id'].unique()

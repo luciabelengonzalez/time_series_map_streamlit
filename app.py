@@ -43,7 +43,7 @@ for uid in unique_ids:
     # Obtener la primera coordenada para cada ID
     coord = df[df['id'] == uid].iloc[0]
     folium.CircleMarker(
-        location=[coord['lat'], coord['lon']],
+        location=[coord['latitude'], coord['longitude']],
         radius=8,  # Tamaño del punto
         color='blue',  # Color del borde
         fill=True,

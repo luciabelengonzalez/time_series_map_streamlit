@@ -9,7 +9,10 @@ import requests
 from io import StringIO
 import streamlit as st
 
+# URL de tiles satelitales de ESRI
+ESRI_SATELLITE_TILES = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
 
+@st.cache
 url = 'https://raw.githubusercontent.com/luciabelengonzalez/time_series_map_streamlit/main/EVI_Puntos_250m%20(1).csv'
 response = requests.get(url)
 df = pd.read_csv(StringIO(response.text))
@@ -26,7 +29,8 @@ df['date'] = pd.to_datetime(df['date'])
 
 
 # Crear un mapa base usando Folium
-m = folium.Map(location=[df['latitude'].mean(), df['longitude'].mean()], zoom_start=5)
+m = folium.Map(location=[df['latitude'].mean(), df['longitude'].mean()], zoom_start=5, tiles=ESRI_SATELLITE_TILES,
+    attr="ESRI")
 
 # Agregar un marcador por ID único
 unique_ids = df['id'].unique()

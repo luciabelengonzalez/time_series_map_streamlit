@@ -53,9 +53,9 @@ function sendID(id) {
 # Agregar puntos con CircleMarker y JavaScript para enviar el ID
 unique_ids = df['id'].unique()
 for uid in unique_ids:
-    coord = data[data['id'] == uid].iloc[0]
+    coord = df[df['id'] == uid].iloc[0]
     folium.CircleMarker(
-        location=[coord['lat'], coord['lon']],
+        location=[coord['latitude'], coord['longitude']],
         radius=8,  # Tamaño del punto
         color='blue',  # Color del borde
         fill=True,

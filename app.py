@@ -26,7 +26,7 @@ df['date'] = pd.to_datetime(df['date'])
 
 
 # Crear un mapa base usando Folium
-m = folium.Map(location=[df['latitude'].mean(), df['longitude'].mean()], zoom_start=20)
+m = folium.Map(location=[df['latitude'].mean(), df['longitude'].mean()], zoom_start=5)
 
 # Agregar un marcador por ID único
 unique_ids = df['id'].unique()
@@ -49,9 +49,16 @@ selected_id = st.selectbox('Selecciona un ID:', unique_ids)
 # Filtrar los datos por ID seleccionado
 selected_data = df[df['id'] == selected_id]
 
-# Crear un gráfico de la serie temporal de EVI
-fig = px.line(selected_data, x='date', y='EVI', title=f'Serie Temporal de EVI para ID: {selected_id}')
-
+# Comprobar si hay datos seleccionados
+if not selected_data.empty:
+    # Crear un gráfico de la serie temporal de EVI
+    fig = px.line(selected_data, x='date', y='EVI', title=f'Serie Temporal de EVI para ID: {selected_id}', markers=True)
+    # Mostrar el gráfico en Streamlit
+    st.write(f"### Serie Temporal de EVI para ID: {selected_id}")
+    st.plotly_chart(fig)
+else:
+    st.write("No hay datos disponibles para el ID seleccionado.")
+    
 # Mostrar el gráfico en Streamlit
 st.write(f"### Serie Temporal de EVI para ID: {selected_id}")
 

@@ -53,30 +53,19 @@ function sendID(id) {
 # Agregar puntos con CircleMarker y JavaScript para enviar el ID
 unique_ids = df['id'].unique()
 for uid in unique_ids:
-    coord = df[df['id'] == uid].iloc[0]
-    popup_html = f"""
-    <p>ID: {uid}</p>
-    <button onclick="sendID('{uid}')">Ver serie temporal</button>
-    """
-    iframe = IFrame(html=popup_html + script, width=200, height=100)
-    folium.Popup(iframe).add_to(
-        folium.CircleMarker(
-            location=[coord['latitude'], coord['longitude']],
-            radius=8,
-            color='blue',
-            fill=True,
-            fill_color='blue',
-            fill_opacity=0.6,
-        )
+    coord = data[data['id'] == uid].iloc[0]
+    folium.CircleMarker(
+        location=[coord['lat'], coord['lon']],
+        radius=8,  # Tamaño del punto
+        color='blue',  # Color del borde
+        fill=True,
+        fill_color='blue',  # Color de relleno
+        fill_opacity=0.6,  # Opacidad del relleno
+        popup=f"ID: {uid}"
     ).add_to(m)
-
-# Guardar el mapa en un archivo HTML
-map_html = 'map.html'
-m.save(map_html)
 
 # Mostrar el mapa en Streamlit
 st.write("### Mapa de puntos")
-components.html(open(map_html, 'r').read(), height=500)
 
 # Obtener el ID desde el mensaje enviado
 selected_id = st.text_input('ID seleccionado')

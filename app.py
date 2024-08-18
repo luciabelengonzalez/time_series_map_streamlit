@@ -8,6 +8,8 @@ import os
 import requests
 from io import StringIO
 import streamlit as st
+import streamlit.components.v1 as components
+
 
 # URL de tiles satelitales de ESRI
 ESRI_SATELLITE_TILES = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'

@@ -31,12 +31,33 @@ df['date'] = pd.to_datetime(df['date'])
 m = folium.Map(location=[df['latitude'].mean(), df['longitude'].mean()], zoom_start=5, tiles=ESRI_SATELLITE_TILES,
     attr="ESRI")
 
+# Crear un contenedor de JavaScript para enviar el ID al frontend de Streamlit
+script = """
+<script>
+function sendID(id) {
+    const streamlitMessage = {
+        type: 'message',
+        data: { id: id }
+    };
+    window.parent.postMessage(streamlitMessage, '*');
+}
+</script>
+"""
+
+
+
 # Agregar un marcador por ID único
 unique_ids = df['id'].unique()
 for uid in unique_ids:
     # Obtener la primera coordenada para cada ID
     coord = df[df['id'] == uid].iloc[0]
-    folium.CircleMarker(
+    popup_html = f"""
+    <p>ID: {uid}</p>
+    <button onclick="sendID('{uid}')">Ver serie temporal</button>
+    """
+    iframe = IFrame(html=popup_html + script, width=200, height=100)
+    folium.Popup(iframe).add_to(
+        folium.CircleMarker(
         location=[coord['latitude'], coord['longitude']],
         radius=8,  # Tamaño del punto
         color='blue',  # Color del borde

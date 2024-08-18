@@ -36,37 +36,51 @@ m = folium.Map(
     tiles=ESRI_SATELLITE_TILES,
     attr="ESRI"
 )
+def create_time_series_plot(id):
+    selected_df = df[df['id'] == id]
+    fig = px.line(selected_df, x='date', y='EVI', title=f'Serie Temporal de EVI para ID: {id}', markers=True)
+    return fig.to_html(full_html=False)
 
 # Agregar un marcador por ID único
 unique_ids = df['id'].unique()
 for uid in unique_ids:
     # Obtener la primera coordenada para cada ID
     coord = df[df['id'] == uid].iloc[0]
-    folium.CircleMarker(
+    time_series_html = create_time_series_plot(uid)
+    popup_html = f"""
+    <h4>ID: {uid}</h4>
+    {time_series_html}
+    """
+    folium.Marker(
         location=[coord['latitude'], coord['longitude']],
-        radius=8,  # Tamaño del punto
-        color='blue',  # Color del borde
-        fill=True,
-        fill_color='blue',  # Color de relleno
-        fill_opacity=0.6,  # Opacidad del relleno
-        popup=f"ID: {uid}").add_to(m)
+        popup=folium.Popup(folium.IFrame(html=popup_html, width=500, height=400), max_width=500),
+        icon=folium.Icon(color='blue')
+    ).add_to(m)
+    #folium.CircleMarker(
+    #    location=[coord['latitude'], coord['longitude']],
+    #    radius=8,  # Tamaño del punto
+    #    color='blue',  # Color del borde
+    #    fill=True,
+    #    fill_color='blue',  # Color de relleno
+    #    fill_opacity=0.6,  # Opacidad del relleno
+    #    popup=f"ID: {uid}").add_to(m)
 
 # Mostrar el mapa en Streamlit
 st.write("### Mapa de puntos")
 folium_static(m)
 
 # Seleccionar ID en el mapa
-selected_id = st.selectbox('Selecciona un ID:', unique_ids)
+#selected_id = st.selectbox('Selecciona un ID:', unique_ids)
 
 # Filtrar los datos por ID seleccionado
-selected_df = df[df['id'] == selected_id]
+#selected_df = df[df['id'] == selected_id]
 
 # Comprobar si hay datos seleccionados
-if not selected_df.empty:
+#if not selected_df.empty:
     # Crear un gráfico de la serie temporal de EVI
-    fig = px.line(selected_df, x='date', y='EVI', title=f'Serie Temporal de EVI para ID: {selected_id}', markers=True)
+ #   fig = px.line(selected_df, x='date', y='EVI', title=f'Serie Temporal de EVI para ID: {selected_id}', markers=True)
     # Mostrar el gráfico en Streamlit
-    st.write(f"### Serie Temporal de EVI para ID: {selected_id}")
-    st.plotly_chart(fig)
-else:
-    st.write("No hay datos disponibles para el ID seleccionado.")
+  #  st.write(f"### Serie Temporal de EVI para ID: {selected_id}")
+   # st.plotly_chart(fig)
+#else:
+ #   st.write("No hay datos disponibles para el ID seleccionado.")

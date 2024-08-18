@@ -23,7 +23,7 @@ df['coordinates'] = df['coordinates'].apply(lambda x: list(map(float, x.split(',
 df[['longitude', 'latitude']] = pd.DataFrame(df['coordinates'].tolist(), index=df.index)
 
 # Crear un mapa base usando Folium
-m = folium.Map(location=[df['latitude'].mean(), data['longitude'].mean()], zoom_start=10)
+m = folium.Map(location=[df['latitude'].mean(), df['longitude'].mean()], zoom_start=10)
 
 # Agregar un marcador por ID único
 unique_ids = df['id'].unique()

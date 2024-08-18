@@ -28,29 +28,6 @@ df['coordinates'] = df['coordinates'].apply(lambda x: list(map(float, x.split(',
 df[['longitude', 'latitude']] = pd.DataFrame(df['coordinates'].tolist(), index=df.index)
 df['date'] = pd.to_datetime(df['date'])
 
- import pandas as pd
-import folium
-import plotly.express as px
-import streamlit as st
-from streamlit_folium import folium_static
-import requests
-from io import StringIO
-
-# URL de tiles satelitales de ESRI
-ESRI_SATELLITE_TILES = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
-
-# Descargar el archivo CSV
-url = 'https://raw.githubusercontent.com/luciabelengonzalez/time_series_map_streamlit/main/EVI_Puntos_250m%20(1).csv'
-response = requests.get(url)
-df = pd.read_csv(StringIO(response.text))
-
-# Limpiar y procesar las coordenadas
-df['coordinates'] = df['coordinates'].str.replace("[", "")
-df['coordinates'] = df['coordinates'].str.replace("]", "")
-df['coordinates'] = df['coordinates'].apply(lambda x: list(map(float, x.split(','))))
-df[['longitude', 'latitude']] = pd.DataFrame(df['coordinates'].tolist(), index=df.index)
-df['date'] = pd.to_datetime(df['date'])
-
 # Crear un mapa base usando Folium con fondo de ESRI
 def create_map():
     m = folium.Map(

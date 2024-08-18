@@ -22,9 +22,11 @@ df['coordinates'] = df['coordinates'].str.replace("]", "")
 # Convertir la columna de coordenadas de texto a listas de flotantes (longitud, latitud)
 df['coordinates'] = df['coordinates'].apply(lambda x: list(map(float, x.split(','))))
 df[['longitude', 'latitude']] = pd.DataFrame(df['coordinates'].tolist(), index=df.index)
+df['date'] = pd.to_datetime(df['date'])
+
 
 # Crear un mapa base usando Folium
-m = folium.Map(location=[df['latitude'].mean(), df['longitude'].mean()], zoom_start=10)
+m = folium.Map(location=[df['latitude'].mean(), df['longitude'].mean()], zoom_start=20)
 
 # Agregar un marcador por ID único
 unique_ids = df['id'].unique()

@@ -37,38 +37,26 @@ m = folium.Map(
     attr="ESRI"
 )
 
-# Crear un contenedor de JavaScript para enviar el ID al frontend de Streamlit
-script = """
-<script>
-function sendID(id) {
-    const streamlitMessage = {
-        type: 'message',
-        df: { id: id }
-    };
-    window.parent.postMessage(streamlitMessage, '*');
-}
-</script>
-"""
+# Crear un mapa base usando Folium
+m = folium.Map(location=[df['latitude'].mean(), df['longitude'].mean()], zoom_start=10)
 
-# Agregar puntos con CircleMarker y JavaScript para enviar el ID
+# Agregar un marcador por ID único
 unique_ids = df['id'].unique()
 for uid in unique_ids:
+    # Obtener la primera coordenada para cada ID
     coord = df[df['id'] == uid].iloc[0]
-    folium.CircleMarker(
+    folium.Marker(
         location=[coord['latitude'], coord['longitude']],
-        radius=8,  # Tamaño del punto
-        color='blue',  # Color del borde
-        fill=True,
-        fill_color='blue',  # Color de relleno
-        fill_opacity=0.6,  # Opacidad del relleno
-        popup=f"ID: {uid}"
+        popup=f"ID: {uid}",
+        icon=folium.Icon(color='blue')
     ).add_to(m)
 
 # Mostrar el mapa en Streamlit
 st.write("### Mapa de puntos")
+folium_static(m)
 
-# Obtener el ID desde el mensaje enviado
-selected_id = st.text_input('ID seleccionado')
+# Seleccionar ID en el mapa
+selected_id = st.selectbox('Selecciona un ID:', unique_ids)
 
 # Filtrar los datos por ID seleccionado
 selected_df = df[df['id'] == selected_id]

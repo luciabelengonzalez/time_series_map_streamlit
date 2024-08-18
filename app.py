@@ -28,7 +28,7 @@ df['coordinates'] = df['coordinates'].apply(lambda x: list(map(float, x.split(',
 df[['longitude', 'latitude']] = pd.DataFrame(df['coordinates'].tolist(), index=df.index)
 df['date'] = pd.to_datetime(df['date'])
 
-
+ 
 # Crear un mapa base usando Folium con fondo de ESRI
 m = folium.Map(
     location=[df['latitude'].mean(), df['longitude'].mean()],

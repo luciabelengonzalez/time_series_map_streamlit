@@ -12,8 +12,6 @@ import streamlit as st
 # URL de tiles satelitales de ESRI
 ESRI_SATELLITE_TILES = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
 
-@st.cache_resource
-
 url = 'https://raw.githubusercontent.com/luciabelengonzalez/time_series_map_streamlit/main/EVI_Puntos_250m%20(1).csv'
 response = requests.get(url)
 df = pd.read_csv(StringIO(response.text))

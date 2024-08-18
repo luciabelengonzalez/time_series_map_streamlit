@@ -20,67 +20,35 @@ df['coordinates'] = df['coordinates'].str.replace("]", "")
 
 # Convertir la columna de coordenadas de texto a listas de flotantes (longitud, latitud)
 df['coordinates'] = df['coordinates'].apply(lambda x: list(map(float, x.split(','))))
+df[['longitude', 'latitude']] = pd.DataFrame(df['coordinates'].tolist(), index=df.index)
 
-# Convertir la columna de fecha a tipo datetime
-df['date'] = pd.to_datetime(df['date'])
+# Crear un mapa base usando Folium
+m = folium.Map(location=[df['latitude'].mean(), data['longitude'].mean()], zoom_start=10)
 
-# Extraer año y mes de la fecha como Periodo y luego convertir a string
-df['year_month'] = df['date'].dt.to_period('M').astype(str)
-print(df.head())  # Print the first few rows to see if 'coordinates' is present and correctly formatted
-# Crear una función para generar el mapa
+# Agregar un marcador por ID único
+unique_ids = df['id'].unique()
+for uid in unique_ids:
+    # Obtener la primera coordenada para cada ID
+    coord = df[df['id'] == uid].iloc[0]
+    folium.Marker(
+        location=[coord['latitude'], coord['longitude']],
+        popup=f"ID: {uid}",
+        icon=folium.Icon(color='blue')
+    ).add_to(m)
 
-def create_map(df):
-    used_ids = []
-    df[['longitude', 'latitude']] = pd.DataFrame(df['coordinates'].tolist(), index=df.index)
-    lon_mean = df['longitude'].astype(float).mean()
-    lat_mean = df['latitude'].astype(float).mean()
-    m = folium.Map(location=[lon_mean,
-                              lat_mean],
-                   zoom_start=10)
+# Mostrar el mapa en Streamlit
+st.write("### Mapa de puntos")
+folium_static(m)
 
-    # Agrupar los puntos en un MarkerCluster
-    marker_cluster = MarkerCluster().add_to(m)
+# Seleccionar ID en el mapa
+selected_id = st.selectbox('Selecciona un ID:', unique_ids)
 
-    for idx, row in df.iterrows():
-        if row['id'] not in used_ids:
-            popup_content = f"""
-            <b>ID:</b> {row['id']}<br>
-            <b>Date:</b> {row['date'].strftime('%Y-%m-%d')}<br>
-            <b>EVI:</b> {row['EVI']}<br>
-            <a href="#" onclick="fetch_data({row['id']}); return false;">View Time Series</a>
-            """
-            popup = IFrame(popup_content, width=200, height=100)
-            folium.Marker(location=[row['latitude'], row['longitude']], popup=folium.Popup(popup)).add_to(marker_cluster)
-    
-    return m
+# Filtrar los datos por ID seleccionado
+selected_data = df[df['id'] == selected_id]
 
-# Crear la serie temporal
-def plot_time_series(df, point_id):
-    data = df[df['id'] == point_id]
-    if not data.empty:
-        plt.figure(figsize=(10, 6))
-        plt.plot(data['date'], data['EVI'], marker='o')
-        plt.title(f"Time Series for ID {point_id}")
-        plt.xlabel('Date')
-        plt.ylabel('EVI')
-        plt.grid(True)
-        plt.xticks(rotation=45)
-        st.pyplot(plt)
-    else:
-        st.write("No data available for this ID")
+# Crear un gráfico de la serie temporal de EVI
+fig = px.line(selected_data, x='date', y='EVI', title=f'Serie Temporal de EVI para ID: {selected_id}')
 
-# Crear la aplicación Streamlit
-st.title("Interactive Map with Time Series")
+# Mostrar el gráfico en Streamlit
+st.write(f"### Serie Temporal de EVI para ID: {selected_id}")
 
-# Mostrar el mapa interactivo
-map = create_map(df)
-st.components.v1.html(map._repr_html_(), height=600)
-
-# Obtener la lista única de IDs
-ids = df['id'].unique()
-
-# Crear un selector de ID
-selected_id = st.selectbox("Select an ID to view its time series:", ids)
-
-# Mostrar la serie temporal correspondiente al ID seleccionado
-plot_time_series(df, selected_id)

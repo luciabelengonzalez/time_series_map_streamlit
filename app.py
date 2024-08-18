@@ -42,11 +42,14 @@ unique_ids = df['id'].unique()
 for uid in unique_ids:
     # Obtener la primera coordenada para cada ID
     coord = df[df['id'] == uid].iloc[0]
-    folium.Marker(
-        location=[coord['latitude'], coord['longitude']],
-        popup=f"ID: {uid}",
-        icon=folium.Icon(color='blue')
-    ).add_to(m)
+    folium.CircleMarker(
+        location=[coord['lat'], coord['lon']],
+        radius=8,  # Tamaño del punto
+        color='blue',  # Color del borde
+        fill=True,
+        fill_color='blue',  # Color de relleno
+        fill_opacity=0.6,  # Opacidad del relleno
+        popup=f"ID: {uid}").add_to(m)
 
 # Mostrar el mapa en Streamlit
 st.write("### Mapa de puntos")

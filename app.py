@@ -27,9 +27,13 @@ df[['longitude', 'latitude']] = pd.DataFrame(df['coordinates'].tolist(), index=d
 df['date'] = pd.to_datetime(df['date'])
 
 
-# Crear un mapa base usando Folium
-m = folium.Map(location=[df['latitude'].mean(), df['longitude'].mean()], zoom_start=5, tiles=ESRI_SATELLITE_TILES,
-    attr="ESRI")
+# Crear un mapa base usando Folium con fondo de ESRI
+m = folium.Map(
+    location=[df['lat'].mean(), df['lon'].mean()],
+    zoom_start=10,
+    tiles=ESRI_SATELLITE_TILES,
+    attr="ESRI"
+)
 
 # Crear un contenedor de JavaScript para enviar el ID al frontend de Streamlit
 script = """
@@ -37,19 +41,16 @@ script = """
 function sendID(id) {
     const streamlitMessage = {
         type: 'message',
-        data: { id: id }
+        df: { id: id }
     };
     window.parent.postMessage(streamlitMessage, '*');
 }
 </script>
 """
 
-
-
-# Agregar un marcador por ID único
+# Agregar puntos con CircleMarker y JavaScript para enviar el ID
 unique_ids = df['id'].unique()
 for uid in unique_ids:
-    # Obtener la primera coordenada para cada ID
     coord = df[df['id'] == uid].iloc[0]
     popup_html = f"""
     <p>ID: {uid}</p>
@@ -58,27 +59,33 @@ for uid in unique_ids:
     iframe = IFrame(html=popup_html + script, width=200, height=100)
     folium.Popup(iframe).add_to(
         folium.CircleMarker(
-        location=[coord['latitude'], coord['longitude']],
-        radius=8,  # Tamaño del punto
-        color='blue',  # Color del borde
-        fill=True,
-        fill_color='blue',  # Color de relleno
-        fill_opacity=0.6)).add_to(m)
+            location=[coord['lat'], coord['lon']],
+            radius=8,
+            color='blue',
+            fill=True,
+            fill_color='blue',
+            fill_opacity=0.6,
+        )
+    ).add_to(m)
+
+# Guardar el mapa en un archivo HTML
+map_html = 'map.html'
+m.save(map_html)
 
 # Mostrar el mapa en Streamlit
 st.write("### Mapa de puntos")
-folium_static(m)
+components.html(open(map_html, 'r').read(), height=500)
 
-# Seleccionar ID en el mapa
-selected_id = st.selectbox('Selecciona un ID:', unique_ids)
+# Obtener el ID desde el mensaje enviado
+selected_id = st.text_input('ID seleccionado')
 
 # Filtrar los datos por ID seleccionado
-selected_data = df[df['id'] == selected_id]
+selected_df = df[df['id'] == selected_id]
 
 # Comprobar si hay datos seleccionados
-if not selected_data.empty:
+if not selected_df.empty:
     # Crear un gráfico de la serie temporal de EVI
-    fig = px.line(selected_data, x='date', y='EVI', title=f'Serie Temporal de EVI para ID: {selected_id}', markers=True)
+    fig = px.line(selected_df, x='date', y='EVI', title=f'Serie Temporal de EVI para ID: {selected_id}', markers=True)
     # Mostrar el gráfico en Streamlit
     st.write(f"### Serie Temporal de EVI para ID: {selected_id}")
     st.plotly_chart(fig)

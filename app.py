@@ -26,7 +26,7 @@ df['coordinates'] = df['coordinates'].str.replace("]", "")
 # Convertir la columna de coordenadas de texto a listas de flotantes (longitud, latitud)
 df['coordinates'] = df['coordinates'].apply(lambda x: list(map(float, x.split(','))))
 df[['longitude', 'latitude']] = pd.DataFrame(df['coordinates'].tolist(), index=df.index)
-df['date'] = pd.to_datetime(df['date'])
+df['date'] = pd.to_datetime(df['date'], format='%d/%m/%Y')
 
 # Crear un mapa base usando Folium con fondo de ESRI
 def create_map():

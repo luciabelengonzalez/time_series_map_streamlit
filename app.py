@@ -56,7 +56,7 @@ if 'map' not in st.session_state:
 st.write("### Mapa de puntos")
 folium_static(st.session_state.map)
 
-# Crear un gráfico de la serie temporal de EVI
+# Crear un gráfico de la serie temporal de NDVI
 def create_time_series_plot(id):
     selected_df = df[df['id'] == id]
     fig = px.line(selected_df, x='date', y='NDVI', title=f'Serie Temporal de NDVI para ID: {id}', markers=True)
@@ -73,7 +73,7 @@ if not selected_df.empty:
     # Crear el gráfico de la serie temporal de NDVI
     fig = create_time_series_plot(selected_id)
     # Mostrar el gráfico en Streamlit
-    st.write(f"### Serie Temporal de EVI para ID: {selected_id}")
+    st.write(f"### Serie Temporal de NDVI para ID: {selected_id}")
     st.plotly_chart(fig)
 else:
     st.write("No hay datos disponibles para el ID seleccionado.")

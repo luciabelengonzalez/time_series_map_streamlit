@@ -18,7 +18,7 @@ url = 'https://raw.githubusercontent.com/luciabelengonzalez/time_series_map_stre
 response = requests.get(url)
 df = pd.read_csv(StringIO(response.text))
 
-
+print(df.head())
 df['coordinates'] = df['coordinates'].str.replace("[", "")
 df['coordinates'] = df['coordinates'].str.replace("]", "")
 

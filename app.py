@@ -16,7 +16,7 @@ ESRI_SATELLITE_TILES = 'https://server.arcgisonline.com/ArcGIS/rest/services/Wor
 
 url = 'https://raw.githubusercontent.com/luciabelengonzalez/time_series_map_streamlit/main/ndvi_timeseries_with_id.csv'
 response = requests.get(url)
-df = pd.read_csv(StringIO(response.text))
+df = pd.read_csv(StringIO(response.text), sep=";")
 
 print(df.head())
 df['coordinates'] = df['coordinates'].str.replace("[", "")

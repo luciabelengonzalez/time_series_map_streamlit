@@ -59,7 +59,7 @@ folium_static(st.session_state.map)
 # Crear un gráfico de la serie temporal de EVI
 def create_time_series_plot(id):
     selected_df = df[df['id'] == id]
-    fig = px.line(selected_df, x='date', y='NDVI', title=f'Serie Temporal de EVI para ID: {id}', markers=True)
+    fig = px.line(selected_df, x='date', y='NDVI', title=f'Serie Temporal de NDVI para ID: {id}', markers=True)
     return fig
 
 # Seleccionar ID para mostrar la serie temporal

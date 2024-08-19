@@ -14,7 +14,7 @@ import streamlit.components.v1 as components
 # URL de tiles satelitales de ESRI
 ESRI_SATELLITE_TILES = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
 
-url = 'https://raw.githubusercontent.com/luciabelengonzalez/time_series_map_streamlit/main/EVI_Puntos_250m%20(1).csv'
+url = 'https://raw.githubusercontent.com/luciabelengonzalez/time_series_map_streamlit/main/ndvi_timeseries_with_id.csv'
 response = requests.get(url)
 df = pd.read_csv(StringIO(response.text))
 
@@ -59,7 +59,7 @@ folium_static(st.session_state.map)
 # Crear un gráfico de la serie temporal de EVI
 def create_time_series_plot(id):
     selected_df = df[df['id'] == id]
-    fig = px.line(selected_df, x='date', y='EVI', title=f'Serie Temporal de EVI para ID: {id}', markers=True)
+    fig = px.line(selected_df, x='date', y='NDVI', title=f'Serie Temporal de EVI para ID: {id}', markers=True)
     return fig
 
 # Seleccionar ID para mostrar la serie temporal
@@ -70,7 +70,7 @@ selected_df = df[df['id'] == selected_id]
 
 # Comprobar si hay datos seleccionados
 if not selected_df.empty:
-    # Crear el gráfico de la serie temporal de EVI
+    # Crear el gráfico de la serie temporal de NDVI
     fig = create_time_series_plot(selected_id)
     # Mostrar el gráfico en Streamlit
     st.write(f"### Serie Temporal de EVI para ID: {selected_id}")
